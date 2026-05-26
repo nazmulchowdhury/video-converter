@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# A simple, fast and powerful tool to convert videos into audio formats with ease.
+
+converter() {
+	filename="${1}"
+	prefix="${filename//.*/}"
+	suffix="${filename//*./}"
+	if [[ "${suffix}" != "mp3" ]]; then
+		mv "${filename}" "input.${suffix}"
+		cvlc "input.${suffix}" --nosout-video --no-repeat --sout "#transcode{acodec=mp3,ab=128,channels=2,samplerate=44100}:standard{access=file,dst=output.mp3}" vlc://quit
+		filesize=$(wc -c <output.mp3)
+		while [[ "${filesize}" == 0 ]]; do
+			cvlc "input.${suffix}" --nosout-video --no-repeat --sout "#transcode{acodec=mp3,ab=128,channels=2,samplerate=44100}:standard{access=file,dst=output.mp3}" vlc://quit
+			filesize=$(wc -c <output.mp3)
+		done
+		if [[ "${filesize}" -gt 0 ]]; then
+			rm "input.${suffix}"
+			mv output.mp3 "${prefix}.mp3"
+		fi
+	else
+		echo "mp3 is not allowed"
+	fi
+}
+
+converter "${1}"
