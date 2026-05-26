@@ -12,7 +12,7 @@ A simple, fast and powerful tool to convert videos into audio formats with ease.
 
 ```bash
 sudo mv video-converter /usr/local/bin
-video-converter <file_name> <start> <stop>
+video-converter <file_name>
 ```
 
 ## Author
